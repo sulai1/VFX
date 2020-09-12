@@ -1,0 +1,32 @@
+digraph G {
+node0 [shape="box" color="steelblue" style="filled" label="VFXValue`1 Float (16)
+Rate_a"]
+node1 [shape="box" color="steelblue" style="filled" label="VFXValue`1 Float3 ((0.0, 1.0, 0.0))
+bounds_center"]
+node2 [shape="box" color="steelblue" style="filled" label="VFXValue`1 Float3 ((2.0, 3.0, 2.0))
+bounds_size"]
+node3 [shape="box" color="steelblue" style="filled" label="VFXValue`1 Mesh (Cube (UnityEngine.Mesh))
+mesh"]
+node4 [shape="box" color="steelblue" style="filled" label="VFXValue`1 Uint32 (4294967295)
+subMeshMask"]
+node5 [shape="box" color="steelblue" style="filled" label="VFXValue`1 Float3 ((-0.3, 0.2, -0.3))
+A_a"]
+node6 [shape="box" color="steelblue" style="filled" label="VFXValue`1 Float3 ((0.3, 1.0, 0.3))
+B_a"]
+node7 [shape="box" color="steelblue" style="filled" label="VFXValue`1 Float (1)
+A_b"]
+node8 [shape="box" color="steelblue" style="filled" label="VFXValue`1 Float (3)
+B_b"]
+node9 [shape="box" color="cyan" style="filled" label="VFXExpressionBakeGradient Float
+Color_a"]
+node10 [shape="box" color="lightslategray" style="filled" label="VFXValue`1 ColorGradient (UnityEngine.Gradient)"]
+node11 [shape="box" color="cyan" style="filled" label="VFXBuiltInExpression Float (DeltaTime)
+deltaTime_b
+deltaTime_c"]
+node12 [shape="box" color="steelblue" style="filled" label="VFXValue`1 Float (0,5)
+smoothness
+metallic"]
+node13 [shape="box" color="steelblue" style="filled" label="VFXTexture2DValue Texture2D (Default-Checker (UnityEngine.Texture2D))
+baseColorMap"]
+node10 -> node9 
+}
