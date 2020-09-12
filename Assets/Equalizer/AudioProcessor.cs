@@ -11,8 +11,12 @@ using UnityEngineInternal;
 [RequireComponent(typeof(AudioSource))]
 public class AudioProcessor : MonoBehaviour
 {
+    public float height = 100;
     public VisualEffect equalizer;
     public AudioSource audioSource;
+    public LineRenderer lineRenderer;
+
+    public Text debug;
     public float clipLoudness;
     public float updateStep = 0.1f;
     public int sampleDataLength = 1024;
@@ -20,8 +24,12 @@ public class AudioProcessor : MonoBehaviour
     private VisualEffect vfx;
     private int logSpectrumLength = 10;
     private float currentUpdateTime = 0f;
+    private float[] data = new float[10240];
+    private Vector3[] positions = new Vector3[1024];
+
     private float[] spectrum;
     private float[] logSpectrum;
+
 
     public Texture2D tex;
     [Range(0, 1)]
@@ -57,14 +65,23 @@ public class AudioProcessor : MonoBehaviour
     {
         spectrum = new float[sampleDataLength];
         currentUpdateTime += Time.deltaTime;
-        Debug.Log(" " + audioSource.clip );
         if (audioSource != null && currentUpdateTime >= updateStep)
         {
+            Debug.Log(lineRenderer.positionCount + " " + audioSource.clip);
+
             Play();
             audioSource.GetSpectrumData(spectrum, 0, FFTWindow.Hanning);
+
+            int offsetSamples = (audioSource.timeSamples > data.Length) ? audioSource.timeSamples - data.Length : 0;
+
+            audioSource.clip.GetData(data, offsetSamples);
+
+            for (int i = 0; i < positions.Length; i++)
+                positions[i] = GetPosition(i);
+            lineRenderer.SetPositions(positions);
+
             currentUpdateTime = 0f;
 
-            tex.Apply();
             clipLoudness = 0f;
             for (int i = 0; i < spectrum.Length / 2; i++)
             {
@@ -76,29 +93,43 @@ public class AudioProcessor : MonoBehaviour
                 low += Mathf.Abs(spectrum[i]);
             }
             low /= 5f;
-            Debug.Log(clipLoudness*100000);
+            debug.text = audioSource.pitch + " - " + audioSource.time + " - " + clipLoudness;
+            Debug.Log(clipLoudness * 100000);
             LogSpectrum(spectrum, logSpectrum);
             tex.SetPixelData(logSpectrum, 0, 0);
             clipLoudness /= sampleDataLength;
-            //if (vfx!=null)
-            //{
-            //    vfx.SetFloat("Radius", .5f + clipLoudness * 200);
-            //    vfx.SetFloat("Frequency", 1 + low * 2);
-            //    if (low > 0.06)
-            //        vfx.SendEvent("Burst");
-            //    equalizer.SetTexture("Spectrum", tex);
-            //    equalizer.SendEvent("Emit"); 
-            //}
+            if (vfx != null)
+            {
+                vfx.SetFloat("Radius", .5f + clipLoudness * 200);
+                vfx.SetFloat("Frequency", 1 + low * 2);
+                if (low > 0.06)
+                    vfx.SendEvent("Burst");
+                equalizer.SetTexture("Spectrum", tex);
+                equalizer.SendEvent("Emit");
+            }
             for (int i = 0; i < logSpectrum.Length; i++)
             {
                 float a = logSpectrum[i];
                 if (a > threashold)
                     spectrumEvent.Invoke(i, a);
             }
+            tex.Apply();
 
         }
     }
-    
+
+    private Vector3 GetPosition(int index)
+    {
+        int l = data.Length / positions.Length;
+        float sum = 0;
+        for (int i = 0; i < l; i++)
+        {
+            sum += data[index * l + i];
+        }
+        sum /= l;
+        return new Vector3(10 * (index / ((float)positions.Length) * 2 - 1), sum * height, 0);
+    }
+
     public void SetMicrophone(Dropdown dropdown)
     {
         SetMicrophone(Microphone.devices[dropdown.value]);
