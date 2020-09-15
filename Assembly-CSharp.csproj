@@ -63,39 +63,41 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AudioViz\AudioBuffer.cs" />
+    <Compile Include="Assets\AudioViz\WaveForm.cs" />
     <Compile Include="Assets\Controller.cs" />
     <Compile Include="Assets\Equalizer\AudioProcessor.cs" />
     <Compile Include="Assets\Equalizer\EQ.cs" />
     <Compile Include="Assets\Input\Settings.cs" />
+    <Compile Include="Assets\Orb.cs" />
     <Compile Include="Assets\ProceduralMesh.cs" />
-    <Compile Include="Assets\Waveform\AudioBuffer.cs" />
-    <Compile Include="Assets\Waveform\WaveForm.cs" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_profileface.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_frontalcatface.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_frontalface.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_licence_plate_rus_16stages.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\README.txt" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalface_alt.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalcatface_extended.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_lowerbody.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_righteye_2splits.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalcatface.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_fullbody.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_lefteye_2splits.xml" />
+    <Compile Include="Assets\Spectrum.cs" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_profileface.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_frontalcatface.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_frontalface.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_licence_plate_rus_16stages.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\README.txt" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalface_alt.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalcatface_extended.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_lowerbody.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_righteye_2splits.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalcatface.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_fullbody.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_lefteye_2splits.xml" />
     <None Include="Assets\JuliaSet\Fractal.cginc" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_eye_tree_eyeglasses.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_upperbody.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_frontalface_improved.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_smile.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\bin\Emgu.CV.UI.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\bin\Emgu.CV.World.Netstandard.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalface_alt_tree.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalface_alt2.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_eye.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_profileface.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_silverware.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalface_default.xml" />
-    <None Include="Assets\Waveform\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_russian_plate_number.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_eye_tree_eyeglasses.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_upperbody.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_frontalface_improved.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_smile.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\bin\Emgu.CV.UI.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\bin\Emgu.CV.World.Netstandard.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalface_alt_tree.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalface_alt2.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_eye.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_profileface.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_silverware.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_frontalface_default.xml" />
+    <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_russian_plate_number.xml" />
     <Reference Include="UnityEngine">
       <HintPath>P:/2019.4.1f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -279,17 +281,17 @@
     <Reference Include="UnityEditor">
       <HintPath>P:/2019.4.1f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.DebuggerVisualizers">
-      <HintPath>D:/Documents/Projects/VFX/Assets/Waveform/emgucv-windesktop 4.2.0.3662/bin/Emgu.CV.DebuggerVisualizers.dll</HintPath>
+    <Reference Include="Emgu.CV.World.Netstandard">
+      <HintPath>D:/Documents/Projects/VFX/Assets/AudioViz/emgucv-windesktop 4.2.0.3662/bin/Emgu.CV.World.Netstandard.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV.UI">
-      <HintPath>D:/Documents/Projects/VFX/Assets/Waveform/emgucv-windesktop 4.2.0.3662/bin/Emgu.CV.UI.dll</HintPath>
+      <HintPath>D:/Documents/Projects/VFX/Assets/AudioViz/emgucv-windesktop 4.2.0.3662/bin/Emgu.CV.UI.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.World.Netstandard">
-      <HintPath>D:/Documents/Projects/VFX/Assets/Waveform/emgucv-windesktop 4.2.0.3662/bin/Emgu.CV.World.Netstandard.dll</HintPath>
+    <Reference Include="Emgu.CV.DebuggerVisualizers">
+      <HintPath>D:/Documents/Projects/VFX/Assets/AudioViz/emgucv-windesktop 4.2.0.3662/bin/Emgu.CV.DebuggerVisualizers.dll</HintPath>
     </Reference>
     <Reference Include="ZedGraph">
-      <HintPath>D:/Documents/Projects/VFX/Assets/Waveform/emgucv-windesktop 4.2.0.3662/bin/ZedGraph.dll</HintPath>
+      <HintPath>D:/Documents/Projects/VFX/Assets/AudioViz/emgucv-windesktop 4.2.0.3662/bin/ZedGraph.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>P:/2019.4.1f1/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

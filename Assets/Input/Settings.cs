@@ -6,13 +6,12 @@ using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-    private Canvas canvas;
+    private GameObject Canvas=> transform.GetChild(0).gameObject;
     public Text timeText;
 
     // Start is called before the first frame update
     void Start()
     {
-        canvas=gameObject.GetComponent<Canvas>();
         CheckMicrophones();
     }
 
@@ -27,7 +26,6 @@ public class Settings : MonoBehaviour
     }
     public void CheckMicrophones()
     {
-
         var dropdown = GetComponentInChildren<Dropdown>();
         dropdown.ClearOptions();
         dropdown.AddOptions(Microphone.devices.ToList());
@@ -36,8 +34,8 @@ public class Settings : MonoBehaviour
 
     public bool Enabled
     {
-        get { return canvas.enabled; }
-        set { canvas.enabled=value; }
+        get { return Canvas.activeSelf; }
+        set { Canvas.SetActive(value); }
     }
 
 }
