@@ -11,38 +11,54 @@ using UnityEngineInternal;
 [RequireComponent(typeof(AudioSource))]
 public class AudioProcessor : MonoBehaviour
 {
-    public float height = 100;
+
     public VisualEffect equalizer;
     public AudioSource audioSource;
+    public AudioLowPassFilter lowpass;
+
+
+    //public AudioBuffer Buffer { get; private set; }
+    public float[] Data => data;    
+
     public LineRenderer lineRenderer;
 
     public Text debug;
     public float clipLoudness;
     public float updateStep = 0.1f;
-    public int sampleDataLength = 1024;
+    public int sampleDataLength = 8192;
 
     private VisualEffect vfx;
-    private int logSpectrumLength = 10;
+    private int logSpectrumLength;
     private float currentUpdateTime = 0f;
-    private float[] data = new float[10240];
-    private Vector3[] positions = new Vector3[1024];
+    private float[] data;
 
     private float[] spectrum;
     private float[] logSpectrum;
-
+    private float[] akku=new float[1024];
 
     public Texture2D tex;
     [Range(0, 1)]
     public float gamma = 0.5f;
 
     public SpectrumEvent spectrumEvent;
+    public SpectrumEvent2 spectrumEvent2;
+    public WaveformEvent waveformEvent;
 
     [Serializable]
     public class SpectrumEvent : UnityEvent<int, float> { }
 
+    [Serializable]
+    public class SpectrumEvent2 : UnityEvent<AudioProcessor> { }
+
+    [Serializable]
+    public class WaveformEvent : UnityEvent<AudioProcessor> { }
+
     [Range(0, 1)]
     public float threashold = .5f;
     private string device;
+    public float[] LogSpectrum => logSpectrum;
+    public float[] Spectrum => spectrum;
+
 
     void Awake()
     {
@@ -67,19 +83,16 @@ public class AudioProcessor : MonoBehaviour
         currentUpdateTime += Time.deltaTime;
         if (audioSource != null && currentUpdateTime >= updateStep)
         {
-            Debug.Log(lineRenderer.positionCount + " " + audioSource.clip);
+            //Debug.Log(lineRenderer.positionCount + " " + audioSource.clip.length);
 
             Play();
             audioSource.GetSpectrumData(spectrum, 0, FFTWindow.Hanning);
-
+            // Get Wave
             int offsetSamples = (audioSource.timeSamples > data.Length) ? audioSource.timeSamples - data.Length : 0;
-
             audioSource.clip.GetData(data, offsetSamples);
+            //Buffer.Insert(data, audioSource.timeSamples);
 
-            for (int i = 0; i < positions.Length; i++)
-                positions[i] = GetPosition(i);
-            lineRenderer.SetPositions(positions);
-
+            waveformEvent.Invoke(this);
             currentUpdateTime = 0f;
 
             clipLoudness = 0f;
@@ -93,9 +106,10 @@ public class AudioProcessor : MonoBehaviour
                 low += Mathf.Abs(spectrum[i]);
             }
             low /= 5f;
+            
             debug.text = audioSource.pitch + " - " + audioSource.time + " - " + clipLoudness;
-            Debug.Log(clipLoudness * 100000);
-            LogSpectrum(spectrum, logSpectrum);
+            
+            logSpectrum =  CalcultateLogSpectrum(spectrum, ref akku);
             tex.SetPixelData(logSpectrum, 0, 0);
             clipLoudness /= sampleDataLength;
             if (vfx != null)
@@ -117,19 +131,6 @@ public class AudioProcessor : MonoBehaviour
 
         }
     }
-
-    private Vector3 GetPosition(int index)
-    {
-        int l = data.Length / positions.Length;
-        float sum = 0;
-        for (int i = 0; i < l; i++)
-        {
-            sum += data[index * l + i];
-        }
-        sum /= l;
-        return new Vector3(10 * (index / ((float)positions.Length) * 2 - 1), sum * height, 0);
-    }
-
     public void SetMicrophone(Dropdown dropdown)
     {
         SetMicrophone(Microphone.devices[dropdown.value]);
@@ -138,6 +139,7 @@ public class AudioProcessor : MonoBehaviour
     {
         this.device = device;
         audioSource.clip = Microphone.Start(device, true, 10, 44100);
+        //Buffer = new AudioBuffer(1, 44100,data.Length);
         if (audioSource.clip == null)
             Debug.Log("Failed Loading Mic");
         Debug.Log("Start recording");
@@ -148,12 +150,12 @@ public class AudioProcessor : MonoBehaviour
     {
         audioSource.Play();
         audioSource.timeSamples = Microphone.GetPosition(device);//When set up here, it will be almost real-time synchronization.
-
+        data = new float[40240];
         int min;
         int max;
         Microphone.GetDeviceCaps(device, out min, out max);
         //aud.timeSamples = 0;
-        Debug.Log("Start playing" + min + " " + max);
+        //Debug.Log("Start playing" + min + " " + max);
     }
 
     public void Show(int i, float a)
@@ -161,25 +163,30 @@ public class AudioProcessor : MonoBehaviour
         Debug.Log($"{i}-{a}");
     }
 
-    public float[] LogSpectrum(float[] spectrum, float[] akku)
+    public float[] CalcultateLogSpectrum(float[] spectrum, ref float[] akku)
     {
-        float[] logSpectrum = new float[logSpectrumLength];
+
+        logSpectrumLength = Mathf.FloorToInt(Mathf.Sqrt(sampleDataLength+1)-.5f);
+        var logSpectrum = new float[logSpectrumLength];
+        if (akku.Length != logSpectrumLength)
+            akku = new float[logSpectrumLength];
 
         int index = 0;
         for (int i = 0; i < logSpectrumLength; i++)
         {
             float sum = 0;
-            int v = 1 << i;
-            for (int j = 0; j < v; j++)
+            int v = i+1;
+            for (int j = 0; j < v&&spectrum.Length>index; j++) 
                 sum += Mathf.Abs(spectrum[index++]);
-            sum /= v;
-            logSpectrum[i] = sum * (i + 1) * (i + 1);
+            sum /= v; 
+            logSpectrum[i] = sum * (i + 1) * (i + 1) ;
         }
 
         for (int i = 0; i < logSpectrum.Length; i++)
         {
-            akku[i] = Mathf.Lerp(this.logSpectrum[i], logSpectrum[i], gamma);
+            akku[i] = Mathf.Lerp(akku[i], logSpectrum[i], gamma);
         }
+        spectrumEvent2.Invoke(this);
 
         return logSpectrum;
     }
