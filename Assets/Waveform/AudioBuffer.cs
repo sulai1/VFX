@@ -13,8 +13,8 @@ public class AudioBuffer
 
     private float bpm;
     private int start;
-    private float[] buffer;
-    int lastOffset = 0;
+    private int offset;
+    private float[][] buffer;
 
 
     public AudioBuffer(float seconds, int sampleRate, int windowSize) : this(Mathf.FloorToInt(seconds * sampleRate), sampleRate, windowSize) { }
@@ -24,7 +24,7 @@ public class AudioBuffer
         this.length = length;
         this.sampleRate = sampleRate;
         this.capacity = 2 * length;
-        buffer = new float[capacity];
+        buffer = new float[capacity][];
     }
 
     public float Duration => length / sampleRate;
@@ -33,41 +33,37 @@ public class AudioBuffer
 
     public IEnumerable<float> Data()
     {
-        return buffer;
+        for (int i=start;i<buffer.Length;i++)
+            for(int j=offset;j<buffer[i].Length;i++)
+                yield return buffer[i][j];
     }
 
 
     public void Insert(float[] data, int offset)
     {
+        this.offset = offset;
         int samples = Mathf.Min(data.Length, Mathf.FloorToInt(Time.deltaTime * sampleRate));
         Debug.Log("Buffer Insert");
 
-        for (int i = 0; i < samples; i++)
+        try
         {
-            try
+            if (start >= capacity)
             {
-                if (start >= capacity)
-                {
-                    start = 0;
-                    Update();
-                    buffer[start] = data[i];
-                }
-                else
-                {
-                    buffer[start] = data[i];
-                    start++;
-                }
+                start = 0;
+                Update();
             }
-            catch
-            {
-                Debug.Log(start + " " + buffer.Length + ", " + data.Length + " " + i);
-            }
+            buffer[start] = data;
+            start++;
+        }
+        catch
+        {
+            Debug.Log(start + " " + buffer.Length + ", " + data.Length );
         }
     }
 
     private void Update()
     {
-        bpm = CalculateBPM(Data().ToArray(), sampleRate);
+        //bpm = CalculateBPM(Data().ToArray(), sampleRate);
         Debug.Log("Buffer Update (BPM:" + bpm + ")");
     }
 

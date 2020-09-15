@@ -88,7 +88,7 @@ public class AudioProcessor : MonoBehaviour
             Play();
             audioSource.GetSpectrumData(spectrum, 0, FFTWindow.Hanning);
             // Get Wave
-            int offsetSamples = (audioSource.timeSamples > data.Length) ? audioSource.timeSamples - data.Length : 0;
+            int offsetSamples =  (audioSource.timeSamples > data.Length) ? audioSource.timeSamples - data.Length : 0;
             audioSource.clip.GetData(data, offsetSamples);
             //Buffer.Insert(data, audioSource.timeSamples);
 
@@ -138,7 +138,7 @@ public class AudioProcessor : MonoBehaviour
     public void SetMicrophone(string device)
     {
         this.device = device;
-        audioSource.clip = Microphone.Start(device, true, 10, 44100);
+        audioSource.clip = Microphone.Start(device, true, 100, 44100);
         //Buffer = new AudioBuffer(1, 44100,data.Length);
         if (audioSource.clip == null)
             Debug.Log("Failed Loading Mic");
@@ -178,8 +178,7 @@ public class AudioProcessor : MonoBehaviour
             int v = i+1;
             for (int j = 0; j < v&&spectrum.Length>index; j++) 
                 sum += Mathf.Abs(spectrum[index++]);
-            sum /= v; 
-            logSpectrum[i] = sum * (i + 1) * (i + 1) ;
+            logSpectrum[i] = sum   ;
         }
 
         for (int i = 0; i < logSpectrum.Length; i++)

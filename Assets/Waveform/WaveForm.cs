@@ -53,7 +53,9 @@ public class WaveForm : MonoBehaviour
         }
         sum /= l;
         var h = spectrum ? (sum) * height + yOffset : sum * height + yOffset;
-        return new Vector3(width * ((index / ((float)positions.Length)) * 2f - 1f), h, 0);
+        var t = index / ((float)positions.Length);
+        h += curve.Evaluate(t);
+        return new Vector3(width * (t * 2f - 1f), h, 0);
     }
 
 }
