@@ -30,10 +30,10 @@ public class WaveForm : MonoBehaviour
         if (lineRenderer == null)
             lineRenderer = GetComponent<LineRenderer>();
 
-        if (spectrum)
-            Debug.Log("spectrum " + processor.LogSpectrum.Length);
-        float[] data = spectrum ? processor.LogSpectrum : processor.Data;
-        positions = new Vector3[Mathf.Min(length, data.Length)];
+        float[] data = processor.Data;
+        int len = Mathf.Min(length, data.Length);
+        if(len!=positions.Length)
+            positions = new Vector3[len];
         int l = 1;
         if (data.Length > 0)
             l = data.Length / positions.Length;

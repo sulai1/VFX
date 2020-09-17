@@ -72,6 +72,19 @@
     <Compile Include="Assets\Orb.cs" />
     <Compile Include="Assets\ProceduralMesh.cs" />
     <Compile Include="Assets\Spectrum.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\DSP\Convolve.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\DSP\analyze.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\DSP\const.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\DSP\convert.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\DSP\generate.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\DSP\math.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\DSP\util.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\DSP\window.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\FT\dft.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\FT\fft.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\FT\fftconv.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\FT\stft.cs" />
+    <Compile Include="Assets\mdsplib\mdsplib\FT\twostage.cs" />
     <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\haarcascades\haarcascade_profileface.xml" />
     <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_frontalcatface.xml" />
     <None Include="Assets\AudioViz\emgucv-windesktop 4.2.0.3662\etc\lbpcascades\lbpcascade_frontalface.xml" />
@@ -281,14 +294,14 @@
     <Reference Include="UnityEditor">
       <HintPath>P:/2019.4.1f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.World.Netstandard">
-      <HintPath>D:/Documents/Projects/VFX/Assets/AudioViz/emgucv-windesktop 4.2.0.3662/bin/Emgu.CV.World.Netstandard.dll</HintPath>
+    <Reference Include="Emgu.CV.DebuggerVisualizers">
+      <HintPath>D:/Documents/Projects/VFX/Assets/AudioViz/emgucv-windesktop 4.2.0.3662/bin/Emgu.CV.DebuggerVisualizers.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV.UI">
       <HintPath>D:/Documents/Projects/VFX/Assets/AudioViz/emgucv-windesktop 4.2.0.3662/bin/Emgu.CV.UI.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.DebuggerVisualizers">
-      <HintPath>D:/Documents/Projects/VFX/Assets/AudioViz/emgucv-windesktop 4.2.0.3662/bin/Emgu.CV.DebuggerVisualizers.dll</HintPath>
+    <Reference Include="Emgu.CV.World.Netstandard">
+      <HintPath>D:/Documents/Projects/VFX/Assets/AudioViz/emgucv-windesktop 4.2.0.3662/bin/Emgu.CV.World.Netstandard.dll</HintPath>
     </Reference>
     <Reference Include="ZedGraph">
       <HintPath>D:/Documents/Projects/VFX/Assets/AudioViz/emgucv-windesktop 4.2.0.3662/bin/ZedGraph.dll</HintPath>

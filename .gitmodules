@@ -1,0 +1,3 @@
+[submodule ".\\Assets\\mdsplib"]
+	path = .\\Assets\\mdsplib
+	url = https://github.com/mrmandrake/mdsplib.git

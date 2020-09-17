@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -44,7 +45,10 @@ public class Orb : MonoBehaviour
             vfx.SetFloat("Radius", .5f + processor.clipLoudness * 1000);
 
             float loudness = processor.clipLoudness * 100000;
-            float value =  processor.LogSpectrum[1] + processor.LogSpectrum[3] ;
+
+            float energy = Energy(processor.Data);
+
+            float value =  energy;
 
 
             vfx.SetFloat("Frequency", .5f + value);
@@ -52,6 +56,7 @@ public class Orb : MonoBehaviour
 
             if (value > thresh && t > spacing)
             {
+                Debug.Log(loudness + "min " + min + " Low  " + value + " Threashold " + threshold);
                 vfx.SendEvent("Burst");
                 threshold = value;
                 float b = 60f / t;
@@ -74,7 +79,6 @@ public class Orb : MonoBehaviour
             {
                 min = Mathf.Lerp(min, minT, alpha);
                 threshold = Mathf.Lerp(threshold, thresholdT, alpha);
-                Debug.Log(loudness + "min " + min + " Low  " + value + " Threashold " + threshold );
 
                 minT = float.MaxValue;
                 thresholdT = 0;
@@ -82,5 +86,13 @@ public class Orb : MonoBehaviour
             }
 
         }
+    }
+
+    private float Energy(float[] data)
+    {
+        float e = 0;
+        for (int i = 0; i < data.Length; i++)
+            e += data[i] * data[i];
+        return e;
     }
 }
