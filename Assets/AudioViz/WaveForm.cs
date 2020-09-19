@@ -30,26 +30,27 @@ public class WaveForm : MonoBehaviour
         if (lineRenderer == null)
             lineRenderer = GetComponent<LineRenderer>();
 
-        float[] data = processor.Data;
-        int len = Mathf.Min(length, data.Length);
-        if(len!=positions.Length)
+        IEnumerable<float> data = processor.Buffer.Data();
+        int datalen = processor.Buffer.DataLength;
+        int len = Mathf.Min(length, datalen);
+        if (len != positions.Length)
             positions = new Vector3[len];
-        int l = 1;
-        if (data.Length > 0)
-            l = data.Length / positions.Length;
+        int l = Mathf.Max(datalen/len, 1);
 
+        var enumerator = data.GetEnumerator();
         for (int i = 0; i < positions.Length; i++)
-            positions[i] = GetPosition(data, i, l);
+            positions[i] = GetPosition(enumerator, i, l);
         lineRenderer.positionCount = positions.Length;
         lineRenderer.SetPositions(positions);
     }
 
-    private Vector3 GetPosition(float[] data, int index, int l)
+    private Vector3 GetPosition(IEnumerator<float> data, int index, int l)
     {
         float sum = 0;
         for (int i = 0; i < l; i++)
         {
-            sum += data[index * l + i];
+            data.MoveNext();
+            sum += data.Current;
         }
         sum /= l;
         var h = spectrum ? (sum) * height + yOffset : sum * height + yOffset;

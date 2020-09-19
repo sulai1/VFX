@@ -23,7 +23,7 @@ public class AudioProcessor : MonoBehaviour
 
     public float clipLoudness;
 
-    const int sampleDataLength = 16384;
+    const int sampleDataLength = 1024;
     const int spectrumDataLength = 8192;
 
     private string device;
@@ -54,7 +54,6 @@ public class AudioProcessor : MonoBehaviour
     public float[] Spectrum => spectrum;
     AssemblyLoadEventHandler load;
 
-
     public void Awake()
     {
         load = new AssemblyLoadEventHandler(Init);
@@ -72,7 +71,6 @@ public class AudioProcessor : MonoBehaviour
     {
         Init();
     }
-
 
     // Update is called once per frame
     void Update()

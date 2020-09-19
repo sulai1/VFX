@@ -12,6 +12,9 @@ public class AudioBuffer
     private readonly int sampleRate;
     private readonly int windowSize;
 
+    float energy = 0;
+    float bpm = 0;
+    int counter = 0;
 
     struct WindowData
     {
@@ -22,7 +25,7 @@ public class AudioBuffer
     }
 
     private Queue<WindowData> buffer;
-    private FFT fft;
+    //private FFT fft;
 
     public AudioBuffer(float seconds, int sampleRate, int windowSize) : this(Mathf.FloorToInt(seconds * sampleRate), sampleRate, windowSize) { }
 
@@ -35,8 +38,8 @@ public class AudioBuffer
         this.windowSize = windowSize;
         buffer = new Queue<WindowData>(length);
 
-        fft = new FFT();
-        fft.Initialize((uint)windowSize);
+        //fft = new FFT();
+        //fft.Initialize((uint)windowSize);
     }
 
     public float Duration => length / sampleRate;
@@ -65,19 +68,47 @@ public class AudioBuffer
 
     public void Insert(float[] data)
     {
-
+        counter++;
         if (buffer.Count >= length)
         {
             buffer.Dequeue();
         }
-        spectrum = fft.Direct(data);
-        buffer.Enqueue(new WindowData { data = data, energy = rangeQuadSum(data), fft = spectrum});
-        //Update();
+        //spectrum = fft.Direct(data);
+        energy = rangeQuadSum(data);
+        buffer.Enqueue(new WindowData { data = data, energy = energy, fft = spectrum });
+
+        //compute average energy
+        float e = 0f;
+        foreach (var d in buffer)
+        {
+            e += d.energy;
+        }
+        e /= (float)Length;
+
+        //compute variance
+        float v = 0f;
+        foreach (var d in buffer)
+        {
+            v += (d.energy - e) * (d.energy - e);
+        }
+        v /= (float)Length;
+
+        // compute threashold
+        float c = (-.0025714f * v) + 1.5142857f;
+        if (energy >= c * e)
+        {
+            Update();
+        }
+        //Debug.Log("energy " + energy + " thresh " + c * e + "avg " + e + " var " + v);
     }
 
+    float last = 0;
     private void Update()
     {
-        //bpm = CalculateBPM(Data().ToArray(), sampleRate);
+        float d = (Time.time - last);
+        bpm = 60f / d;
+        Debug.Log("d " + d + " bpm " + bpm + " len " + buffer.Count);
+        last = Time.time;
     }
 
     private static float rangeQuadSum(float[] samples)
