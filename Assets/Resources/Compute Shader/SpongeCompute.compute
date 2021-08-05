@@ -1,0 +1,215 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Update
+#pragma kernel EaseOut
+
+
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/PostProcessing/Shaders/FXAA.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/PostProcessing/Shaders/RTUpscale.hlsl"
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Trails;
+TEXTURE2D_X(Source);
+TEXTURE2D(Mask);
+RWTexture2D<float2> Destination;
+uint width;
+uint height;
+uint maskWidth;
+uint maskHeight;
+float deltaTime;
+//spawn
+uint numAgents;
+float2 spawnCenter = float2(0, 0);
+float2 spawnInnerSize = float2(0, 0);
+float2 spawnOuterSize = float2(0.5, 0.5);
+//motion
+float moveSpeed;
+float turnSpeed = 1;
+float randomStrength = 1;
+float2 force = float2(0, 0);
+// visibility
+float agentStrength = 0.5;
+float diffuseSpeed;
+float evaporateSpeed;
+// sensor
+float sensorOffsetDst = 1;
+float sensorAngleSpacing = 1;
+int sensorSize = 1;
+float repell = 1;
+float sourceStrength = 0.5;
+
+struct Agent {
+	float2 position;
+	float angle;
+	float4 speciesMask;
+};
+
+RWStructuredBuffer<Agent> agents;
+
+
+uint hash(uint state) {
+	state ^= 2747636419u;
+	state *= 2654435769u;
+	state ^= state >> 16;
+	state *= 2654435769u;
+	state ^= state >> 16;
+	state *= 2654435769u;
+	return state;
+}
+
+float scaleToRange01(uint val)
+{
+	return frac(val / 4294967296.0);
+}
+
+
+float rand2(uint2 id)
+{
+	float2 uv = float2(id.x, id.y);
+	return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
+}
+
+float2 rand2MagnitudeRange(uint2 id, float2 min, float2 max)
+{
+	float angle = rand2(id*deltaTime*2516.786595)*2*PI;
+	float2 distance = min + rand2(id * 46256.7975 * deltaTime) * (max - min);
+	return float2(cos(angle) * distance.x, -sin(angle) * distance.y);
+}
+
+Agent spawn(Agent old)
+{
+	Agent agent;
+	agent.angle = old.angle;
+	agent.position = spawnCenter + rand2MagnitudeRange(old.position, spawnInnerSize, spawnOuterSize);
+	agent.position = agent.position * 0.5 + 0.5;
+	agent.position.x *= width;
+	agent.position.y *= height;
+	agent.speciesMask = old.speciesMask;
+	return agent;
+}
+
+float3 maskValue(float2 pos)
+{
+	float2 maskPos = float2(pos.x / width * maskWidth, pos.y / height * maskHeight);
+	return LOAD_TEXTURE2D_X(Mask, maskPos).xyz;
+}
+
+float sense(Agent agent, float sensorAngleOffset)
+{
+	float sensorAngle = agent.angle + sensorAngleOffset;
+	float2 sensorDir = float2(cos(sensorAngle), sin(sensorAngle));
+	int2 sensorCenter = agent.position + sensorDir * sensorOffsetDst;
+
+	float trailSum = 0;
+	float sourceSum = 0;
+	float trailRepell = 0;
+	float sourceRepell = 0;
+
+	for (int offsetX = -sensorSize; offsetX <= sensorSize; offsetX++)
+	{
+		for (int offsetY = -sensorSize; offsetY <= sensorSize; offsetY++)
+		{
+			int2 pos = sensorCenter + int2(offsetX, offsetY);
+			if (pos.x >= 0 || pos.x < (float)width || pos.y >= 0 || pos.y < (float)height)
+			{
+				float mask = length(round(maskValue(pos) * agent.speciesMask.xyz));
+				float4 sourcePixel = float4(LOAD_TEXTURE2D_X(Source, pos).xyz, 1);
+				float4 trailsPixel = Trails[pos];
+				trailSum += length(trailsPixel * agent.speciesMask) * mask;
+				sourceSum += length(sourcePixel * agent.speciesMask) * mask;
+				trailRepell += length(trailsPixel * (float4(1, 1, 1, 1) - agent.speciesMask));
+				sourceRepell += length(sourcePixel * (float4(1, 1, 1, 1) - agent.speciesMask));
+
+			}
+		}
+	}
+	float attract = lerp(trailSum, sourceSum, sourceStrength);
+	float r = lerp(trailRepell, sourceRepell, repell);
+	return attract - r;
+}
+
+[numthreads(64, 1, 1)]
+void Update(uint3 id : SV_DispatchThreadID)
+{
+	if (id.x < 0 || id.x >= numAgents) return;
+
+	Agent agent = agents[id.x];
+	uint random = rand2(id.xy * agent.position * deltaTime);
+
+	//sense
+	float weightForward = sense(agent, 0);
+	float weightLeft = sense(agent, sensorAngleSpacing);
+	float weightRight = sense(agent, -sensorAngleSpacing);
+	float angle = agent.angle;
+
+	float randomSteerStrength = scaleToRange01(random);
+
+	// steer
+	if (weightForward > weightLeft && weightForward > weightRight)
+	{
+		angle += 0;
+	}
+	else if (weightRight > weightLeft)
+	{
+		angle -= moveSpeed * turnSpeed * deltaTime;
+	}
+	else if (weightLeft > weightRight)
+	{
+		angle += moveSpeed * turnSpeed * deltaTime;
+	}
+	else
+	{
+		angle += moveSpeed * (randomSteerStrength - 0.5) * 2 * turnSpeed * deltaTime;
+	}
+	//random steer
+	if (rand2(id.xy) < randomStrength * randomStrength)
+		angle += (randomSteerStrength - 0.5) * 2 * turnSpeed * deltaTime;
+
+	float2 direction = float2(cos(angle), sin(angle));
+	float2 newPos = agent.position + direction * moveSpeed * deltaTime + force * deltaTime;
+
+	// border
+	float4 mask = float4(maskValue(newPos),1);
+	if (mask.r < 0.5 || newPos.x < 0 || newPos.x >= (int)width || newPos.y < 0 || newPos.y >= (int)height)
+	{
+		newPos = spawn(agent).position;
+	}
+
+	// set
+	agents[id.x].position = newPos;
+	agents[id.x].angle = angle;
+	Trails[int2(newPos.x, newPos.y)] = min(Trails[int2(newPos.x, newPos.y)] + agentStrength * agent.speciesMask, float4(1, 1, 1, 1));
+}
+ 
+[numthreads(1, 1, 1)]
+void EaseOut(uint3 id : SV_DispatchThreadID)
+{
+	if (id.x < 0 || id.x >= width || id.y < 0 || id.y >= height) return;
+
+	float4 originalValue = Trails[id.xy];
+
+	float4 sum = 0;
+	for (int offsetX = -1; offsetX <= 1; offsetX++)
+	{
+		for (int offsetY = -1; offsetY <= 1; offsetY++)
+		{
+			int2 index = int2(id.x + offsetX, id.y + offsetY);
+			if (index.x >= 0 || index.x < (float)width || index.y >= 0 || index.y < (float)height)
+				sum += Trails[index];
+		}
+	}
+	float4  blurred = sum / 9;
+
+	float4 diffuseValue = lerp(originalValue, blurred, diffuseSpeed * deltaTime);
+	float4 diffuseEvaporateValue = max(0, diffuseValue - evaporateSpeed * deltaTime);
+
+	/*uint index = id.x + id.y * width;
+	float2 uv = float2(id.x / (float)width, id.y / (float)height);
+	float val = index / (float)width / (float)height;
+	float rnd = rand2(id.xy);*/
+	diffuseEvaporateValue.a = 0;
+	Trails[id.xy] = diffuseEvaporateValue;
+}
