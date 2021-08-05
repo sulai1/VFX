@@ -5,9 +5,14 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/EQ.unity
+  - enabled: 0
+    path: Assets/Scenes/EQ.unity
     guid: ebf2b420082fc994ea3f8f5fbd43dd5d
+  - enabled: 1
+    path: Assets/Scenes/VectorScope.unity
+    guid: 5289d2dda73399d459a1a08cf0ad4b52
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 8b6521c8fc5e4ef4ab8f1f7741240b50,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 9f03070ede5f61e43a044682ecc9d412,
       type: 2}
