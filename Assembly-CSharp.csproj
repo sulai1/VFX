@@ -58,7 +58,6 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\ProceduralMesh.cs" />
     <Compile Include="Assets\Scripts\Effects\LineWave.cs" />
-    <Compile Include="Assets\Scripts\AudioBuffer.cs" />
     <Compile Include="Assets\Scripts\Effects\AudioVisualEffect.cs" />
     <Compile Include="Assets\Scenes\MandelBulb\MandelBulb.cs" />
     <Compile Include="Assets\Scripts\Effects\Chip.cs" />
@@ -72,16 +71,12 @@
     <Compile Include="Assets\Scripts\Controller.cs" />
     <Compile Include="Assets\Scripts\PostProcessing\Sponge.cs" />
     <Compile Include="Assets\Scripts\PostProcessing\ImageTransform.cs" />
-    <Compile Include="Assets\Scripts\AudioProcessor.cs" />
     <Compile Include="Assets\Scripts\Parameter.cs" />
-    <Compile Include="Assets\Ville.cs" />
     <Compile Include="Assets\Scripts\PostProcessing\Refract.cs" />
     <Compile Include="Assets\Scripts\IConstructable.cs" />
-    <Compile Include="Assets\Scripts\Effects\TestAVFX.cs" />
-    <Compile Include="Assets\Scripts\Effects\Spectrum.cs" />
-    <Compile Include="Assets\Scripts\Effects\ValueIndicator.cs" />
     <Compile Include="Assets\Scripts\CameraPlane.cs" />
     <Compile Include="Assets\Scripts\ConstructablleEditor.cs" />
+    <Compile Include="Assets\Ville.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\Compute Shader\SpongeCompute.compute" />
@@ -91,6 +86,7 @@
      <None Include="Assets\Shaders\Post Processing\Kaleidoskop.shader" />
      <None Include="Assets\Shaders\Post Processing\Refract.shader" />
      <None Include="Assets\Lib\codeandweb.com\Readme.txt" />
+     <None Include="Assets\test.txt" />
      <None Include="Assets\Shaders\Includes\Fractal.cginc" />
      <None Include="Assets\Shaders\NewSurfaceShader.shader" />
      <None Include="Assets\Shaders\Includes\Flame.cginc" />
@@ -324,6 +320,9 @@
     </Reference>
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>P:\2021.1.0f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>Assets\Scripts\Audio\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>P:\2021.1.0f1\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>
@@ -762,6 +761,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Audio.csproj">
+      <Project>{8B21795B-808C-D772-8824-6C84F9190A49}</Project>
+      <Name>Audio</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

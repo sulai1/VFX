@@ -1,3 +1,4 @@
+using Assets.Scripts.Audio;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using UnityEngine.VFX;
 
 public class Orb : MonoBehaviour
 {
-    public AudioProcessor processor;
+    public AudioPreprocessor preprocessor;
 
     float threshold = .5f;
     float thresholdT = .5f;
@@ -38,15 +39,15 @@ public class Orb : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (processor != null)
+        if (preprocessor != null)
         {
             t += Time.deltaTime;
             t2 += Time.deltaTime;
-            vfx.SetFloat("Radius", .5f + processor.ClipLoudness * 1000);
+            vfx.SetFloat("Radius", .5f + preprocessor.Peak * 1000);
 
-            float loudness = processor.ClipLoudness * 100000;
+            float loudness = preprocessor.Peak * 100000;
 
-            float energy = Energy(processor.Data);
+            float energy = Energy(preprocessor.Data);
 
             float value =  energy;
 

@@ -1,4 +1,4 @@
-﻿using Assets.AudioViz;
+using Assets.AudioViz;
 using System;
 using System.Reflection;
 using UnityEngine;
@@ -7,14 +7,14 @@ public abstract class AudioVisualEffect : MonoBehaviour
 {
     public KeyCode key;
 
-    protected AudioProcessor processor;
+    protected AudioSource processor;
 
-    public delegate void SetData(AudioProcessor processor);
+    public delegate void SetData(AudioSource processor);
 
     // Start is called before the first frame update
     void Start()
     {
-        processor = GameObject.Find("AudioProcessor").GetComponent<AudioProcessor>();
+        processor = GameObject.Find("AudioProcessor").GetComponent<AudioSource>();
         Init();
     }
 
