@@ -301,14 +301,8 @@
     <Reference Include="TexturePackerImporter">
       <HintPath>Assets\Lib\codeandweb.com\Editor\TexturePackerImporter.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.World.Netstandard">
-      <HintPath>Assets\Lib\emgucv-windesktop 4.2.0.3662\bin\Emgu.CV.World.Netstandard.dll</HintPath>
-    </Reference>
-    <Reference Include="ZedGraph">
-      <HintPath>Assets\Lib\emgucv-windesktop 4.2.0.3662\bin\ZedGraph.dll</HintPath>
-    </Reference>
-    <Reference Include="Emgu.CV.UI">
-      <HintPath>Assets\Lib\emgucv-windesktop 4.2.0.3662\bin\Emgu.CV.UI.dll</HintPath>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>Assets\Scripts\Audio\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>P:\2021.1.0f1\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>

@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scenes\MandelBulb\MandelBulb.cs" />
     <Compile Include="Assets\Scripts\Effects\Chip.cs" />
     <Compile Include="Assets\Scripts\FractalTransformWindow.cs" />
+    <Compile Include="Assets\BeatWave.cs" />
     <Compile Include="Assets\Scripts\Settings.cs" />
     <Compile Include="Assets\Scripts\Effects\Orb.cs" />
     <Compile Include="Assets\Scripts\Effects\Plot.cs" />
@@ -77,6 +78,9 @@
     <Compile Include="Assets\Scripts\CameraPlane.cs" />
     <Compile Include="Assets\Scripts\ConstructablleEditor.cs" />
     <Compile Include="Assets\Ville.cs" />
+    <Compile Include="Assets\Scripts\Common\ActionAttibute.cs" />
+    <Compile Include="Assets\Scripts\Common\EditorBase.cs" />
+    <Compile Include="Assets\Scripts\Common\DisplayAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\Compute Shader\SpongeCompute.compute" />
@@ -747,9 +751,6 @@
     <Reference Include="Unity.XR.Management">
       <HintPath>Library\ScriptAssemblies\Unity.XR.Management.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.HighDefinition.Config.Runtime">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.HighDefinition.Config.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.SpatialTracking">
       <HintPath>Library\ScriptAssemblies\UnityEditor.SpatialTracking.dll</HintPath>
     </Reference>
@@ -764,6 +765,10 @@
     <ProjectReference Include="Audio.csproj">
       <Project>{8B21795B-808C-D772-8824-6C84F9190A49}</Project>
       <Name>Audio</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.RenderPipelines.HighDefinition.Config.Runtime.csproj">
+      <Project>{78705EBF-D4CB-6F14-13F0-3FE19EC520BB}</Project>
+      <Name>Unity.RenderPipelines.HighDefinition.Config.Runtime</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

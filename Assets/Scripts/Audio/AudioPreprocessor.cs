@@ -23,6 +23,7 @@ namespace Assets.Scripts.Audio
         public UnityEvent<AudioBuffer> bufferEvent;
         public FloatSeriesEvent spectrumEvent;
         public FloatSeriesEvent waveformEvent;
+        public UnityEvent<Texture2D,int> textureEvent;
 
         [Serializable]
         public class FloatSeriesEvent : UnityEvent<float[]> { }
@@ -50,6 +51,7 @@ namespace Assets.Scripts.Audio
         public float[] Data => data;
         public float[] Spectrum => spectrum;
         public AudioBuffer Buffer { get; private set; }
+        public Texture2D texture;
 
         /*---------------------------------------*/
         public void Awake()
@@ -104,9 +106,12 @@ namespace Assets.Scripts.Audio
         {
             data = new float[windowSize];
             Buffer = new AudioBuffer(bufferSize, SampleRate, data.Length);
+            texture = new Texture2D(windowSize, bufferSize  , TextureFormat.Alpha8, false);
         }
 
         // Update is called once per frame
+        int index = 0;
+
         void Update()
         {
             if (spectrum == null || data.Length != windowSize)
@@ -149,6 +154,17 @@ namespace Assets.Scripts.Audio
                 waveformEvent.Invoke(Buffer.Data().ToArray());
                 spectrumEvent.Invoke(Buffer.Current.spectrum);
 
+                for (int i = 0; i < Buffer.Current.spectrum.Length; i++)
+                {
+                    float val = Buffer.Current.spectrum[i] * 255;
+                    Color color = Color.HSVToRGB(1, 1, val);
+                    color.a = val;
+                    texture.SetPixel(i, index, color);
+                }
+
+                texture.Apply();
+                textureEvent.Invoke(texture,index);
+                index = (index+1)%Buffer.Count;
             }
             else
             {

@@ -15,6 +15,7 @@ namespace Assets.Scripts.Audio
         public readonly int sampleRate;
         public readonly int windowSize;
 
+
         public class WindowData
         {
             public readonly float[] data;
@@ -40,6 +41,8 @@ namespace Assets.Scripts.Audio
         public int DataLength => length * windowSize;
         public int WindowSize => windowSize;
 
+        public int Count => buffer.Count;
+
         public WindowData Current => buffer.Last();
         public bool IsEmpty => buffer.Count <= 0;
         /// <summary>
@@ -54,15 +57,12 @@ namespace Assets.Scripts.Audio
             this.sampleRate = sampleRate;
             this.windowSize = windowSize;
             buffer = new Queue<WindowData>(length);
-
         }
 
 
         public IEnumerable<float> Data()
         {
-            foreach (var data in buffer)
-                for (int j = 0; j < data.Length; j++)
-                    yield return data.data[j];
+            return buffer.SelectMany(d => d.data);
         }
 
         public void Insert(float samplerate, float[] data, float[] spectrum)
@@ -74,8 +74,7 @@ namespace Assets.Scripts.Audio
 
             WindowData newData = new WindowData(samplerate, data, spectrum);
             buffer.Enqueue(newData);
-
         }
 
-    } 
+    }
 }

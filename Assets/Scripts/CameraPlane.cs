@@ -1,5 +1,7 @@
+using Assets.Scripts.Common;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class CameraPlane : MonoBehaviour
@@ -7,9 +9,14 @@ public class CameraPlane : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Init();
+    }
+
+    [Action]
+    public void Init()
+    {
         var cam = Camera.main;
         CreateMesh(cam);
-
     }
 
     private void CreateMesh(Camera cam)

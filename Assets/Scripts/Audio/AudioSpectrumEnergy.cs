@@ -10,7 +10,7 @@ namespace Assets.Scripts.Audio
     public class AudioSpectrumEnergy : AudioProcessor<float>
     {
 
-        public float Peak { get; protected set; } = 0;
+        public float Peak { get; protected set; } = 0.5f;
         public float BpM { get; protected set; } = 0;
         public float MeadianBPM { get; protected set; } = 0;
 
